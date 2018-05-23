@@ -37,3 +37,10 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation "com.google.ar.sceneform.ux:sceneform-ux:1.0.0"
 }
+
+apply plugin: 'com.google.ar.sceneform.plugin'
+
+sceneform.asset('sampledata/Heart.obj',
+        'default',
+        'sampledata/Heart.sfa',
+        'src/main/assets/Heart')
