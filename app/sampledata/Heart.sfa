@@ -15,7 +15,7 @@
                ],
             },
             {
-               metallic: 1,
+               metallic: 0,
             },
             {
                roughness: 1,
@@ -35,7 +35,7 @@
       ],
       file: "sampledata/Heart.obj",
       name: "Heart",
-      scale: 0.011206000000000001,
+      scale: 0.0001,
       suggested_collision: {
          center: {
             x: 0,
