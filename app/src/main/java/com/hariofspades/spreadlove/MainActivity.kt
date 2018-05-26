@@ -1,5 +1,6 @@
 package com.hariofspades.spreadlove
 
+import android.animation.ObjectAnimator
 import android.graphics.Point
 import android.net.Uri
 import android.os.Bundle
@@ -9,11 +10,15 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.animation.LinearInterpolator
 import com.google.ar.core.Anchor
 import com.google.ar.core.HitResult
 import com.google.ar.core.Plane
 import com.google.ar.core.TrackingState
 import com.google.ar.sceneform.AnchorNode
+import com.google.ar.sceneform.math.Quaternion
+import com.google.ar.sceneform.math.QuaternionEvaluator
+import com.google.ar.sceneform.math.Vector3
 import com.google.ar.sceneform.rendering.ModelRenderable
 import com.google.ar.sceneform.ux.ArFragment
 import com.google.ar.sceneform.ux.TransformableNode
@@ -26,6 +31,8 @@ class MainActivity : AppCompatActivity() {
 
     var isTracking: Boolean = false
     var isHitting: Boolean = false
+
+    var circleAnimation = createAnimator()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,11 +83,47 @@ class MainActivity : AppCompatActivity() {
 
     private fun addNodeToScene(fragment: ArFragment, createAnchor: Anchor, renderable: ModelRenderable) {
         val anchorNode = AnchorNode(createAnchor)
+        val rotatingNode = RotatingNode()
         val transformableNode = TransformableNode(fragment.transformationSystem)
+        rotatingNode.setParent(anchorNode)
+        rotatingNode.renderable = renderable
         transformableNode.renderable = renderable
-        transformableNode.setParent(anchorNode)
+        rotatingNode.addChild(transformableNode)
+        rotatingNode.setParent(anchorNode)
         fragment.arSceneView.scene.addChild(anchorNode)
         transformableNode.select()
+        //rotateObject(renderable)
+    }
+
+    private fun getAnimationDuration(): Long {
+        return (1000 * 360 / (90.0f)).toLong()
+    }
+
+    /** Returns an ObjectAnimator that makes this node rotate.  */
+    private fun createAnimator(): ObjectAnimator {
+        // Node's setLocalRotation method accepts Quaternions as parameters.
+        // First, set up orientations that will animate a circle.
+        val orientation1 = Quaternion.axisAngle(Vector3(0.0f, 1.0f, 0.0f), 0f)
+        val orientation2 = Quaternion.axisAngle(Vector3(0.0f, 1.0f, 0.0f), 120f)
+        val orientation3 = Quaternion.axisAngle(Vector3(0.0f, 1.0f, 0.0f), 240f)
+        val orientation4 = Quaternion.axisAngle(Vector3(0.0f, 1.0f, 0.0f), 360f)
+
+        val orbitAnimation = ObjectAnimator()
+        orbitAnimation.setObjectValues(orientation1, orientation2, orientation3, orientation4)
+
+        // Next, give it the localRotation property.
+        orbitAnimation.propertyName = "localRotation"
+
+        // Use Sceneform's QuaternionEvaluator.
+        orbitAnimation.setEvaluator(QuaternionEvaluator())
+
+        //  Allow orbitAnimation to repeat forever
+        orbitAnimation.repeatCount = ObjectAnimator.INFINITE
+        orbitAnimation.repeatMode = ObjectAnimator.RESTART
+        orbitAnimation.interpolator = LinearInterpolator()
+        orbitAnimation.setAutoCancel(true)
+
+        return orbitAnimation
     }
 
     private fun onUpdate() {

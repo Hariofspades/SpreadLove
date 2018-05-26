@@ -35,7 +35,7 @@
       ],
       file: "sampledata/Heart.obj",
       name: "Heart",
-      scale: 0.0001,
+      scale: 0.0010,
       suggested_collision: {
          center: {
             x: 0,
