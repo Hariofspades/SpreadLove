@@ -26,9 +26,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         fragment = supportFragmentManager.findFragmentById(R.id.sceneform_fragment) as ArFragment
-        fragment.arSceneView.scene.setOnUpdateListener {
-            fragment.onUpdate(it)
-        }
+
         fab.setOnClickListener {
             addObject(Uri.parse("Heart.sfb"))
         }
