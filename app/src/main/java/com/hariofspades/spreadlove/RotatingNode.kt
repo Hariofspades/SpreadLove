@@ -36,7 +36,7 @@ import java.util.ArrayList
 class RotatingNode : Node(), Node.OnTapListener {
     // We'll use Property Animation to make this node rotate.
 
-    private var orbitAnimation: ObjectAnimator? = null
+    private var rotationAnimation: ObjectAnimator? = null
     private var degreesPerSecond = 90.0f
 
     private var lastSpeedMultiplier = 1.0f
@@ -51,7 +51,7 @@ class RotatingNode : Node(), Node.OnTapListener {
         super.onUpdate(frameTime)
 
         // Animation hasn't been set up.
-        if (orbitAnimation == null) {
+        if (rotationAnimation == null) {
             return
         }
 
@@ -64,13 +64,13 @@ class RotatingNode : Node(), Node.OnTapListener {
         }
 
         if (speedMultiplier == 0.0f) {
-            orbitAnimation!!.pause()
+            rotationAnimation!!.pause()
         } else {
-            orbitAnimation!!.resume()
+            rotationAnimation!!.resume()
 
-            val animatedFraction = orbitAnimation!!.animatedFraction
-            orbitAnimation!!.duration = animationDuration
-            orbitAnimation!!.setCurrentFraction(animatedFraction)
+            val animatedFraction = rotationAnimation!!.animatedFraction
+            rotationAnimation!!.duration = animationDuration
+            rotationAnimation!!.setCurrentFraction(animatedFraction)
         }
         lastSpeedMultiplier = speedMultiplier
     }
@@ -89,21 +89,21 @@ class RotatingNode : Node(), Node.OnTapListener {
     }
 
     private fun startAnimation() {
-        if (orbitAnimation != null) {
+        if (rotationAnimation != null) {
             return
         }
-        orbitAnimation = createAnimator()
-        orbitAnimation!!.target = this
-        orbitAnimation!!.duration = animationDuration
-        orbitAnimation!!.start()
+        rotationAnimation = createAnimator()
+        rotationAnimation!!.target = this
+        rotationAnimation!!.duration = animationDuration
+        rotationAnimation!!.start()
     }
 
     private fun stopAnimation() {
-        if (orbitAnimation == null) {
+        if (rotationAnimation == null) {
             return
         }
-        orbitAnimation!!.cancel()
-        orbitAnimation = null
+        rotationAnimation!!.cancel()
+        rotationAnimation = null
     }
 
     /** Returns an ObjectAnimator that makes this node rotate.  */
@@ -115,22 +115,22 @@ class RotatingNode : Node(), Node.OnTapListener {
         val orientation3 = Quaternion.axisAngle(Vector3(0.0f, 1.0f, 0.0f), 240f)
         val orientation4 = Quaternion.axisAngle(Vector3(0.0f, 1.0f, 0.0f), 360f)
 
-        val orbitAnimation = ObjectAnimator()
-        orbitAnimation.setObjectValues(orientation1, orientation2, orientation3, orientation4)
+        val rotationAnimation = ObjectAnimator()
+        rotationAnimation.setObjectValues(orientation1, orientation2, orientation3, orientation4)
 
         // Next, give it the localRotation property.
-        orbitAnimation.propertyName = "localRotation"
+        rotationAnimation.propertyName = "localRotation"
 
         // Use Sceneform's QuaternionEvaluator.
-        orbitAnimation.setEvaluator(QuaternionEvaluator())
+        rotationAnimation.setEvaluator(QuaternionEvaluator())
 
-        //  Allow orbitAnimation to repeat forever
-        orbitAnimation.repeatCount = ObjectAnimator.INFINITE
-        orbitAnimation.repeatMode = ObjectAnimator.RESTART
-        orbitAnimation.interpolator = LinearInterpolator()
-        orbitAnimation.setAutoCancel(true)
+        //  Allow rotationAnimation to repeat forever
+        rotationAnimation.repeatCount = ObjectAnimator.INFINITE
+        rotationAnimation.repeatMode = ObjectAnimator.RESTART
+        rotationAnimation.interpolator = LinearInterpolator()
+        rotationAnimation.setAutoCancel(true)
 
-        return orbitAnimation
+        return rotationAnimation
     }
 
 
