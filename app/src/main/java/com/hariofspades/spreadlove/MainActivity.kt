@@ -71,7 +71,6 @@ class MainActivity : AppCompatActivity() {
         val transformableNode = TransformableNode(fragment.transformationSystem)
 
         rotatingNode.renderable = renderable
-        transformableNode.renderable = renderable
 
         rotatingNode.addChild(transformableNode)
         rotatingNode.setParent(anchorNode)
